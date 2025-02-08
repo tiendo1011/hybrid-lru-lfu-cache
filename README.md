@@ -21,23 +21,24 @@ The cache should be able to get and set elements in O(1) time.
 - Have a keyMap to store the key-value pairs
 - the value will be a pointer to a node in a doublely linked list, with the
 following fields:
+  - key (used to remove the key-pair from keyMap after evict it from freqMap)
   - value
   - freq
   - prev
   - next
-  the doublely linked list reflect the order of most recently used items to
-  the least recently used items with the same frequency, this is tracked by the
-  freqMap
+  the prev, next is used to build a doublly linked list, this doubly linked list
+  will reflect the order of most recently used items to the least recently used
+  items with the same frequency, which is tracked by freqMap
 - freqMap will have:
   - key as the frequency
   - value as a DLL struct, with the linked list of items with the same
   frequency, most recently used to least recently used, with pointer to the
   least recently used (so that we can evict it in O(1))
-- we will have a minFreq to track the least frequently used item
+- we will have a minFreq to track the least frequently used count
 
 ## Algorithm
-- get(key): gets the value at key. If no such key exists, return -1.
-  - if the key not exists in keyMap, return -1
+- get(key): gets the value at key. If no such key exists, return (0, false).
+  - if the key not exists in keyMap, return (0, false)
   - if the key exists in keyMap:
     - get the node from the keyMap
     - increment the frequency of the node
